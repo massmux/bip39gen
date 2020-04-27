@@ -32,7 +32,7 @@ import random,string
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
-parser.add_argument("-e","--entropy", help="The optional entropy provided by the user", type=str, required=False)
+parser.add_argument("-e","--entropy", help="An optional random string", type=str, required=False)
 args = parser.parse_args()
 
 oPassphrase=args.passphrase
@@ -67,8 +67,8 @@ else:
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
 """ print results"""
-print("[Entropy]\n%s" % entropy)
-print("[Words]\n%s" % words)
-print("[Passphrase]\n%s" % passphrase)
-print("[Seed]\n%s" % str(seed))
+print("\nwords\t\t: %s" % words)
+if passphrase:
+    print("passph\t\t: %s" % passphrase)
+print("seed\t\t: %s\n" % str(seed))
 
