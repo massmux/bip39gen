@@ -29,8 +29,7 @@ from binascii import hexlify, unhexlify
 import argparse
 import random
 
-# parsing arguments
-
+""" parsing arguments """
 parser = argparse.ArgumentParser("bip39gen")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
 parser.add_argument("-e","--entropy", help="The optional entropy provided by the user", type=str, required=False)
@@ -39,18 +38,24 @@ args = parser.parse_args()
 oPassphrase=args.passphrase
 oEntropy=args.entropy
 
+""" create 32 letters random string """
+def getRandom(stringLength=32):
+    lettersAndDigits = string.ascii_letters + string.digits
+    return ''.join((random.choice(lettersAndDigits) for i in range(stringLength)))
+
+
 mnemo = Mnemonic('english')
 
+""" check if entropy provided, otherwise internal random """
 if oEntropy:
     pass
 else:
-    oEntropy=random.randint(1,9999999999999999999999999999999999999)
+    oEntropy=getRandom(32)
 
+""" create bip39 24 words """
 entropy_b = bytearray(str(oEntropy), 'utf-8')
 entropy_hash =hashlib.sha256(entropy_b).digest()
 entropy = hexlify(entropy_hash)
-##words = mnemo.to_mnemonic(unhexlify(entropy))
-
 words = mnemo.to_mnemonic(entropy_hash)
 
 if oPassphrase:
@@ -58,10 +63,12 @@ if oPassphrase:
 else:
     passphrase=""
 
+""" calc seed from mnemonic and passphrase """
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
+""" print results"""
 print("Entropy: %s" % entropy)
 print("Words: %s" % words)
-print("Passphrase: %s" % str(passphrase))
+print("Passphrase: %s" % passphrase)
 print("Seed: %s" % str(seed))
 
