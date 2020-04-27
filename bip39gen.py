@@ -27,7 +27,7 @@ import sys
 from mnemonic import Mnemonic
 from binascii import hexlify, unhexlify
 import argparse
-import random
+import random,string
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen")
@@ -67,8 +67,8 @@ else:
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
 """ print results"""
-print("Entropy: %s" % entropy)
-print("Words: %s" % words)
-print("Passphrase: %s" % passphrase)
-print("Seed: %s" % str(seed))
+print("[Entropy]\n%s" % entropy)
+print("[Words]\n%s" % words)
+print("[Passphrase]\n%s" % passphrase)
+print("[Seed]\n%s" % str(seed))
 
