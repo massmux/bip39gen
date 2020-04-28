@@ -30,7 +30,7 @@ import secrets
 
 
 """ parsing arguments """
-parser = argparse.ArgumentParser("bip39gen")
+parser = argparse.ArgumentParser("bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
 parser.add_argument("-e","--entropy", help="An optional random string", type=str, required=False)
 args = parser.parse_args()

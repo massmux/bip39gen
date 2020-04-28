@@ -8,7 +8,7 @@ Generate bip39 mnemonic and seed
  syntax
 
 ```
-usage: bip39gen [-h] [-p PASSPHRASE] [-e ENTROPY]
+usage: bip39gen.py [-h] [-p PASSPHRASE] [-e ENTROPY]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -20,20 +20,28 @@ optional arguments:
 
  example, generate 24 words bip39 mnemonic with internal generation of entropy. Seed created with no passphrase provided
 
- ./bip39gen
+```
+ ./bip39gen.py
+```
  
  example, generate 24 words bip39 mnemonic with a provided string as entropy. Seed created with no passphrase provided
 
- ./bip39gen -e 12345678
+```
+ ./bip39gen.py -e 12345678
+```
  
  example, generate 24 words bip39 mnemonic with internal generation of entropy. Seed created with a passphrase provided
 
- ./bip39gen -p 1234
+```
+ ./bip39gen.py -p 1234
+```
  
  example, generate 24 words bip39 mnemonic with a provided string as entropy. Seed created with the passphrase provided
 
- ./bip39gen -e 12345678 -p 1234
+```
+ ./bip39gen.py -e 12345678 -p 1234
 
+```
 
 
 
