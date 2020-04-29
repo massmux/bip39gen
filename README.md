@@ -47,5 +47,6 @@ optional arguments:
 
 ```
 
+ we talk about that on this video (italian): https://www.youtube.com/watch?v=coszyHeNlEg and also at the telegram group: https://t.me/BitcoinSecPriv
 
 

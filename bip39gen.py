@@ -3,7 +3,7 @@
 
 #   Copyright (C) 2019-2020 Denali Sàrl www.denali.swiss, Massimo Musumeci, @massmux
 #
-#   This file is a script to calculate bip39 24 words mnemonic by computer randomness
+#   This file is a script to calculate bip39 24 words mnemonic by mic gathered randomness
 #
 #   It is subject to the license terms in the LICENSE file found in the top-level
 #   directory of this distribution.
@@ -21,7 +21,6 @@
 #   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
-# better entropy because automatically gathered from audio recording entropy
 
 import hashlib
 from mnemonic import Mnemonic
@@ -49,7 +48,7 @@ if oEntropy:
 else:
     # create random by reading the mic
     print("Creating entropy from a small mic audiorecording.. please wait")
-    mycmd=subprocess.getoutput('arecord -d 3 -t wav -q | sha256sum -b')
+    mycmd=subprocess.getoutput('arecord -d 4 -t wav -q | sha256sum -b')
     print("Generated 256bits entropy: %s" % mycmd[:64])
     entropy_b = bytearray(mycmd[:64], 'utf-8')
 
