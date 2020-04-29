@@ -5,6 +5,11 @@ Generate bip39 mnemonic and seed
 
  the command is totally offline and can be run without any connection to the internet. It is better infact to run on a tails OS with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper.
 
+ to get more entropy you can generate an audiofile from mic and use it to create entropy (please see audgen.py script)
+
+
+## bip39gen
+
  syntax
 
 ```
@@ -15,7 +20,9 @@ optional arguments:
   -p PASSPHRASE, --passphrase PASSPHRASE
                         The optional bip39 passphrase
   -e ENTROPY, --entropy ENTROPY
-                        The optional entropy provided by the user
+                        An optional random string or file=filename to get
+                        entropy from file (example audio)
+
 ```
 
  example, generate 24 words bip39 mnemonic with internal generation of entropy. Seed created with no passphrase provided
@@ -28,6 +35,12 @@ optional arguments:
 
 ```
  ./bip39gen.py -e 12345678
+```
+
+ example, generate 24 words bip39 mnemonic with a provided file (example audio) recorded with the audgen.py script included
+
+```
+ ./bip39gen.py -e file=audiofile.wav
 ```
  
  example, generate 24 words bip39 mnemonic with internal generation of entropy. Seed created with a passphrase provided
@@ -43,5 +56,20 @@ optional arguments:
 
 ```
 
+## audiogen facility
+
+ creates an audiofile from the mic
+
+```
+usage: audgen.py [-h] -f FILENAME [-l LENGTH]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILENAME, --filename FILENAME
+                        Audio filename
+  -l LENGTH, --length LENGTH
+                        Audio recording length (default=3 sec)
+
+```
 
 

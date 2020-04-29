@@ -32,7 +32,7 @@ import secrets
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
-parser.add_argument("-e","--entropy", help="An optional random string", type=str, required=False)
+parser.add_argument("-e","--entropy", help="An optional random string or file=filename to get entropy from file (example audio)", type=str, required=False)
 args = parser.parse_args()
 
 oPassphrase=args.passphrase
@@ -41,9 +41,17 @@ oEntropy=args.entropy
 mnemo = Mnemonic('english')
 
 """ check if entropy provided, otherwise internal random """
+fileContent=""
 if oEntropy:
     # accept and use entropy string provided by user
-    entropy_b = bytearray(str(oEntropy), 'utf-8')
+    if oEntropy[:5]=='file=':
+        # entropy from external bin file
+        with open( oEntropy[5:], mode='rb') as file: # b is important -> binary
+            fileContent = file.read()
+        entropy_b = bytearray(str(fileContent), 'utf-8')
+    else:
+        # entropy as a string provided
+        entropy_b = bytearray(str(oEntropy), 'utf-8')
 else:
     # create 256bits random byte string
     entropy_b = secrets.token_bytes(32)
