@@ -1,8 +1,5 @@
 #!/usr/bin/python3
 
-"""
-This script gather an audio file from mic and creates a file. Used to create entropy
-"""
 
 import argparse
 import sounddevice as sd
