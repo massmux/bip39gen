@@ -23,18 +23,16 @@
 
 # better entropy because automatically gathered from audio recording entropy
 
-import hashlib,os
+import hashlib
 from mnemonic import Mnemonic
 from binascii import hexlify, unhexlify
 import argparse
-import secrets
-from audlib import getAudio
-from datetime import datetime
+import subprocess
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
-parser.add_argument("-e","--entropy", help="An optional random string", type=str, required=False)
+parser.add_argument("-e","--entropy", help="An optional random string as provided entropy", type=str, required=False)
 args = parser.parse_args()
 
 oPassphrase=args.passphrase
@@ -51,12 +49,9 @@ if oEntropy:
 else:
     # create random by reading the mic
     print("Creating entropy from a small mic audiorecording.. please wait")
-    oF=str(datetime.now().strftime('%Y%m%d%H%M%S'))+".wav"
-    getAudio(oF,44100,3)
-    with open( oF, mode='rb') as file: 
-        fileContent = file.read()
-        entropy_b = bytearray(str(fileContent), 'utf-8')
-    os.remove(oF)
+    mycmd=subprocess.getoutput('arecord -d 3 -t wav -q | sha256sum')
+    print("Generated 256bits entropy: %s" % mycmd)
+    entropy_b = bytearray(mycmd, 'utf-8')
 
 """ create bip39 24 words """
 entropy_hash =hashlib.sha256(entropy_b).digest()

@@ -6,17 +6,6 @@ Generate bip39 mnemonic and seed
  the command is totally offline and can be run without any connection to the internet. It is better infact to run on a tails OS with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper.
 
 
-## bip39gen
-
- requirements (for audio)
-
-```
- pip3 install sounddevice
- pip3 install scipy
-```
-
- 
-
  syntax
 
 ```
@@ -58,20 +47,5 @@ optional arguments:
 
 ```
 
-## audiogen facility
-
- if you just want to create an audiofile from the mic, you can use this facility
-
-```
-usage: audgen.py [-h] -f FILENAME [-l LENGTH]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -f FILENAME, --filename FILENAME
-                        Audio filename
-  -l LENGTH, --length LENGTH
-                        Audio recording length (default=3 sec)
-
-```
 
 
