@@ -33,12 +33,9 @@ parser = argparse.ArgumentParser("bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
 parser.add_argument("-e","--entropy", help="An optional random string in case you prefer providing your own entropy", type=str, required=False)
 args = parser.parse_args()
-
-oPassphrase=args.passphrase
-oEntropy=args.entropy
+(oPassphrase,oEntropy)=(args.passphrase,args.entropy)
 
 mnemo = Mnemonic('english')
-
 """ check if entropy provided, otherwise use random from mic recording """
 fileContent=""
 if oEntropy:
@@ -58,7 +55,6 @@ entropy = hexlify(entropy_hash)
 words = mnemo.to_mnemonic(entropy_hash)
 
 passphrase = oPassphrase or ""
-
 """ calc seed from mnemonic and passphrase """
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
