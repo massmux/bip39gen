@@ -21,18 +21,18 @@
 #   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 #   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 
-# better entropy because automatically gathered from audio recording entropy
 
-import hashlib,os
+# simple version: worse entropy but no additional library required
+
+import hashlib
 from mnemonic import Mnemonic
 from binascii import hexlify, unhexlify
 import argparse
 import secrets
-from audlib import getAudio
-from datetime import datetime
+
 
 """ parsing arguments """
-parser = argparse.ArgumentParser("bip39gen.py")
+parser = argparse.ArgumentParser("simple-bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
 parser.add_argument("-e","--entropy", help="An optional random string", type=str, required=False)
 args = parser.parse_args()
@@ -42,21 +42,14 @@ oEntropy=args.entropy
 
 mnemo = Mnemonic('english')
 
-""" check if entropy provided, otherwise use random from mic recording """
+""" check if entropy provided, otherwise internal random """
 fileContent=""
 if oEntropy:
     # accept and use entropy string provided by user
-    print("You provided the entropy as a string")
     entropy_b = bytearray(str(oEntropy), 'utf-8')
 else:
-    # create random by reading the mic
-    print("Creating entropy from a small mic audiorecording.. please wait")
-    oF=str(datetime.now().strftime('%Y%m%d%H%M%S'))+".wav"
-    getAudio(oF,44100,3)
-    with open( oF, mode='rb') as file: 
-        fileContent = file.read()
-        entropy_b = bytearray(str(fileContent), 'utf-8')
-    os.remove(oF)
+    # create 256bits random byte string
+    entropy_b = secrets.token_bytes(32)
 
 """ create bip39 24 words """
 entropy_hash =hashlib.sha256(entropy_b).digest()
@@ -69,7 +62,7 @@ passphrase = oPassphrase or ""
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
 """ print results"""
-print("words\t\t: %s" % words)
+print("\nwords\t\t: %s" % words)
 if passphrase:
     print("passph\t\t: %s" % passphrase)
 print("seed\t\t: %s\n" % str(seed))
