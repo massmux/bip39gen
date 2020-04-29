@@ -20,6 +20,8 @@ Generate bip39 mnemonic and seed
  syntax
 
 ```
+without params, creates mnemonic by gathering mic audio as entropy
+
 usage: bip39gen.py [-h] [-p PASSPHRASE] [-e ENTROPY]
 
 optional arguments:
@@ -27,8 +29,7 @@ optional arguments:
   -p PASSPHRASE, --passphrase PASSPHRASE
                         The optional bip39 passphrase
   -e ENTROPY, --entropy ENTROPY
-                        An optional random string or file=filename to get
-                        entropy from file (example audio)
+                        An optional random string
 
 ```
 
