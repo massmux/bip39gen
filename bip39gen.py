@@ -32,7 +32,7 @@ import subprocess
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
-parser.add_argument("-e","--entropy", help="An optional random string as provided entropy", type=str, required=False)
+parser.add_argument("-e","--entropy", help="An optional random string in case you prefer providing your own entropy", type=str, required=False)
 args = parser.parse_args()
 
 oPassphrase=args.passphrase
@@ -49,9 +49,9 @@ if oEntropy:
 else:
     # create random by reading the mic
     print("Creating entropy from a small mic audiorecording.. please wait")
-    mycmd=subprocess.getoutput('arecord -d 3 -t wav -q | sha256sum')
-    print("Generated 256bits entropy: %s" % mycmd)
-    entropy_b = bytearray(mycmd, 'utf-8')
+    mycmd=subprocess.getoutput('arecord -d 3 -t wav -q | sha256sum -b')
+    print("Generated 256bits entropy: %s" % mycmd[:64])
+    entropy_b = bytearray(mycmd[:64], 'utf-8')
 
 """ create bip39 24 words """
 entropy_hash =hashlib.sha256(entropy_b).digest()

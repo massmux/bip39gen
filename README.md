@@ -1,7 +1,7 @@
 # bip39gen
 Generate bip39 mnemonic and seed
 
- from the command line you can generate a 24 words bip39 mnemonic from a random of your choice or with random from audio recording. Also a passphrase can be provided in order to have the bip39 seed correctly generated from mnemonic.
+ from the command line you can generate a 24 words bip39 mnemonic from a random of your choice or by default from entropy from an audio file recorded from the computer's mic. Also a passphrase can be provided in order to have the bip39 seed correctly generated from mnemonic.
 
  the command is totally offline and can be run without any connection to the internet. It is better infact to run on a tails OS with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper.
 
