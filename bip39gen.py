@@ -28,10 +28,13 @@ from binascii import hexlify, unhexlify
 import argparse
 import subprocess
 
+rnd_len=4
+
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
 parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
-parser.add_argument("-e","--entropy", help="An optional random string in case you prefer providing your own entropy", type=str, required=False)
+parser.add_argument("-e","--entropy", help="An optional random string \
+                    in case you prefer providing your own entropy", type=str, required=False)
 args = parser.parse_args()
 (oPassphrase,oEntropy)=(args.passphrase,args.entropy)
 
@@ -44,8 +47,8 @@ if oEntropy:
     entropy_b = bytearray(str(oEntropy), 'utf-8')
 else:
     # create random by reading the mic
-    print("Creating entropy from a small mic audiorecording.. please wait")
-    mycmd=subprocess.getoutput('arecord -d 4 -t wav -q | sha256sum -b')
+    print("Creating entropy from %s secs mic audiorecording.. please wait" % str(rnd_len) )
+    mycmd=subprocess.getoutput('arecord -d %s -f dat -t wav -q | sha256sum -b' %  str(rnd_len) )
     print("Generated 256bits entropy: %s" % mycmd[:64])
     entropy_b = bytearray(mycmd[:64], 'utf-8')
 
@@ -53,14 +56,18 @@ else:
 entropy_hash =hashlib.sha256(entropy_b).digest()
 entropy = hexlify(entropy_hash)
 words = mnemo.to_mnemonic(entropy_hash)
-
+words_arr=words.split(" ")
 passphrase = oPassphrase or ""
 """ calc seed from mnemonic and passphrase """
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
 """ print results"""
-print("words\t\t: %s" % words)
+print("BIP39 words sequence")
+n=1
+for i in words_arr:
+    print("word %s\t: %s" % (n,i) )
+    n+=1
 if passphrase:
-    print("passph\t\t: %s" % passphrase)
-print("seed\t\t: %s\n" % str(seed))
+    print("passph\t: %s" % passphrase)
+print("seed\t: %s\n" % str(seed))
 
