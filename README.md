@@ -1,15 +1,15 @@
 # bip39gen
 Generate bip39 mnemonic and seed
 
- from the command line you can generate a 24 words bip39 mnemonic from a random of your choice or by default from entropy from an audio file recorded from the computer's mic. Also a passphrase can be provided in order to have the bip39 seed correctly generated from mnemonic.
+ from the command line you can generate a 24 words bip39 mnemonic from randomness coming from the computer's mic (usage without the -e parameter) or by providing your own entropy source (using the -e par). Also a passphrase can be provided in order to have the bip39 seed correctly generated from mnemonic.
 
- the command is totally offline and can be run without any connection to the internet. It is better infact to run on a tails OS with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper.
+ the command is totally offline and can be run without any connection to the internet. It is very important infact to run on a Tails OS (or similar Linux flavor OS) with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper. Beware also that no external source is watching at the procedure (a camera for example).
 
 
  syntax
 
 ```
-without params, creates mnemonic by gathering mic audio as entropy
+without params, creates mnemonic by gathering mic audio noise as entropy
 
 usage: bip39gen.py [-h] [-p PASSPHRASE] [-e ENTROPY]
 
@@ -34,13 +34,13 @@ optional arguments:
  ./bip39gen.py -e 12345678
 ```
  
- example, generate 24 words bip39 mnemonic with internal generation of entropy. Seed created with a passphrase provided
+ example, generate 24 words bip39 mnemonic with internal generation of entropy (by mic). Seed created with a passphrase provided
 
 ```
  ./bip39gen.py -p 1234
 ```
  
- example, generate 24 words bip39 mnemonic with a provided string as entropy. Seed created with the passphrase provided
+ example, generate 24 words bip39 mnemonic with a provided string as entropy (this can be a sha256 entry from hashing some random source). Seed created with the passphrase provided
 
 ```
  ./bip39gen.py -e 12345678 -p 1234
