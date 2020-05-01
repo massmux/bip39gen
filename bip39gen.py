@@ -28,7 +28,8 @@ from binascii import hexlify, unhexlify
 import argparse
 import subprocess
 
-rnd_len=4
+""" define length of mic sampling and sha256 rouds number """
+(rnd_len, sha_rounds)=(5,100)
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
@@ -38,20 +39,31 @@ parser.add_argument("-e","--entropy", help="An optional random string \
 args = parser.parse_args()
 (oPassphrase,oEntropy)=(args.passphrase,args.entropy)
 
+def getsha256(z):
+    return hashlib.sha256(z.encode('utf-8')).hexdigest()
+
 mnemo = Mnemonic('english')
 """ check if entropy provided, otherwise use random from mic recording """
 fileContent=""
 if oEntropy:
     # accept and use entropy string provided by user
     print("You provided the entropy as a string")
-    entropy_b = bytearray(str(oEntropy), 'utf-8')
+    hash0=getsha256(oEntropy)
+    print("256bits hash from your source: %s" % hash0)
 else:
-    # create random by reading the mic
+    # create random by reading the mic for rnd_len seconds
     print("Creating entropy from %s secs mic audiorecording.. please wait" % str(rnd_len) )
     mycmd=subprocess.getoutput('arecord -d %s -f dat -t wav -q | sha256sum -b' %  str(rnd_len) )
-    print("Generated 256bits entropy: %s" % mycmd[:64])
-    entropy_b = bytearray(mycmd[:64], 'utf-8')
+    hash0=mycmd[:64]
+    print("256bits hashed entropy from mic: %s" % hash0)
 
+""" sha256 rounds """
+print ("Iterating %s rounds of sha256 hashing" % sha_rounds )
+for i in range(0,sha_rounds):
+    hash0=getsha256(hash0)
+    #print("Round %s val %s" % (i , hash0))
+
+entropy_b = bytearray(hash0, 'utf-8')
 """ create bip39 24 words """
 entropy_hash =hashlib.sha256(entropy_b).digest()
 entropy = hexlify(entropy_hash)
@@ -62,7 +74,7 @@ passphrase = oPassphrase or ""
 seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
 """ print results"""
-print("BIP39 words sequence")
+print("BIP39 words generated sequence")
 n=1
 for i in words_arr:
     print("word %s\t: %s" % (n,i) )
