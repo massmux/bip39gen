@@ -29,7 +29,7 @@ import argparse
 import subprocess
 
 """ define length of mic sampling and sha256 rouds number """
-(rnd_len, sha_rounds)=(10,100)
+(rnd_len, sha_rounds)=(20,1000000)
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
@@ -58,7 +58,7 @@ else:
     print("256bits hashed entropy from mic: %s" % hash0)
 
 """ sha256 rounds """
-print ("Iterating %s rounds of sha256 hashing" % sha_rounds )
+print ("Iterating %s rounds of sha256 hashing.. please wait" % sha_rounds )
 for i in range(0,sha_rounds):
     hash0=getsha256(hash0)
     #print("Round %s val %s" % (i , hash0))
@@ -79,6 +79,10 @@ n=1
 for i in words_arr:
     print("word %s\t: %s" % (n,i) )
     n+=1
+
+print("BIP39 words generated sequence - single line print")
+print(words)
+
 if passphrase:
     print("passph\t: %s" % passphrase)
 print("seed\t: %s\n" % str(seed))
