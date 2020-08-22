@@ -1,5 +1,5 @@
 # bip39gen
-Generate bip39 mnemonic and seed
+Generate bip39 mnemonic by microphone noise randomness 
 
  from the command line you can generate a 24 words bip39 mnemonic from randomness coming from the computer's mic (usage without the -e parameter) or by providing your own entropy source (using the -e par). The source of entropy is then hashed with a number of rounds.
 
