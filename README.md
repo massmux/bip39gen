@@ -1,7 +1,7 @@
 # bip39gen
 Generate bip39 mnemonic by microphone noise randomness 
 
- from the command line you can generate a 24 words bip39 mnemonic from randomness coming from the computer's mic (usage without the -e parameter) or by providing your own entropy source (using the -e par). The source of entropy is then hashed with a number of rounds.
+ you can generate a 24words bip39 sequence from entropy coming from the computer's microphone (usage without the -e parameter) or by providing your own entropy source (with -e parameter). The source of entropy gets hashed a number of rounds.
 
  the command is totally offline and must be run on a clean computer without any connection to the internet. It is suggested for example to run on a Tails OS (or similar Linux flavor OS) with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper. Beware also that no external source is watching at the procedure (a camera for example).
 
@@ -32,6 +32,6 @@ optional arguments:
 ```
  
 
- we talk about these topics on this youtube channel: http://www.youtube.com/c/MassimoSMusumeci and also at the telegram group: https://t.me/BitcoinSecPriv . Please refer also to website https://www.massmux.com for more infos.
+ we talk about these topics on this youtube channel: http://www.youtube.com/c/MassimoSMusumeci and also at the telegram group: https://t.me/BitcoinSecPriv . Please refer also to resources published on the website https://www.massmux.com for more infos.
 
 
