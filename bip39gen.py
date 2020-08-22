@@ -29,15 +29,14 @@ import argparse
 import subprocess
 
 """ define length of mic sampling and sha256 rouds number """
-(rnd_len, sha_rounds)=(20,1000000)
+(rnd_len, sha_rounds)=(2,2048)
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
-parser.add_argument("-p","--passphrase", help="The optional bip39 passphrase", type=str, required=False)
 parser.add_argument("-e","--entropy", help="An optional random string \
                     in case you prefer providing your own entropy", type=str, required=False)
 args = parser.parse_args()
-(oPassphrase,oEntropy)=(args.passphrase,args.entropy)
+oEntropy=args.entropy
 
 def getsha256(z):
     return hashlib.sha256(z.encode('utf-8')).hexdigest()
@@ -46,7 +45,7 @@ mnemo = Mnemonic('english')
 """ check if entropy provided, otherwise use random from mic recording """
 fileContent=""
 if oEntropy:
-    # accept and use entropy string provided by user
+    # accept and use entropy string provided by user instead of mic one
     print("You provided the entropy as a string")
     hash0=getsha256(oEntropy)
     print("256bits hash from your source: %s" % hash0)
@@ -61,6 +60,7 @@ else:
 print ("Iterating %s rounds of sha256 hashing.. please wait" % sha_rounds )
 for i in range(0,sha_rounds):
     hash0=getsha256(hash0)
+    #debug purpose
     #print("Round %s val %s" % (i , hash0))
 
 entropy_b = bytearray(hash0, 'utf-8')
@@ -69,12 +69,9 @@ entropy_hash =hashlib.sha256(entropy_b).digest()
 entropy = hexlify(entropy_hash)
 words = mnemo.to_mnemonic(entropy_hash)
 words_arr=words.split(" ")
-passphrase = oPassphrase or ""
-""" calc seed from mnemonic and passphrase """
-seed=hexlify(Mnemonic.to_seed(words, passphrase))
 
 """ print results"""
-print("BIP39 words generated sequence")
+print("**BIP39 words generated sequence**")
 n=1
 for i in words_arr:
     print("word %s\t: %s" % (n,i) )
@@ -83,7 +80,4 @@ for i in words_arr:
 print("BIP39 words generated sequence - single line print")
 print(words)
 
-if passphrase:
-    print("passph\t: %s" % passphrase)
-print("seed\t: %s\n" % str(seed))
 
