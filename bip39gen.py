@@ -29,7 +29,7 @@ import argparse
 import subprocess
 
 """ define length of mic sampling and sha256 rouds number """
-(rnd_len, sha_rounds)=(60,2048)
+(rnd_len, sha_rounds,slt_len)=(30,2048,5)
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
@@ -49,19 +49,25 @@ if oEntropy:
     print("You provided the entropy as a string")
     hash0=getsha256(oEntropy)
     print("256bits hash from your source: %s" % hash0)
+    salt0=""
 else:
     # create random by reading the mic for rnd_len seconds
-    print("Creating entropy from %s secs mic audiorecording.. please wait" % str(rnd_len) )
+    print("Getting entropy from %s secs mic audiorecording.. please wait" % str(rnd_len) )
     mycmd=subprocess.getoutput('arecord -d %s -f dat -t wav -q | sha256sum -b' %  str(rnd_len) )
     hash0=mycmd[:64]
-    print("256bits hashed entropy from mic: %s" % hash0)
+    print("256bits hashed entropy: %s" % hash0)
+    # create random for salt
+    print("Getting entropy from mic for creating a salt.. please wait" )
+    mysalt=subprocess.getoutput('arecord -d %s -f dat -t wav -q | sha256sum -b' %  str(slt_len) )
+    salt0=mysalt[:64]
+    print("256bits hashed salt: %s" % salt0)
 
 """ sha256 rounds """
-print ("Iterating %s rounds of sha256 hashing.. please wait" % sha_rounds )
+print ("Iterating %s rounds of salted sha256 hashing.. please wait" % sha_rounds )
 for i in range(0,sha_rounds):
-    hash0=getsha256(hash0)
+    hash0=getsha256(hash0+salt0)
     #debug purpose
-    #print("Round %s val %s" % (i , hash0))
+    #print("%s %s Round %s val %s" % (hash0,salt0,i , hash0))
 
 entropy_b = bytearray(hash0, 'utf-8')
 """ create bip39 24 words """
