@@ -28,7 +28,7 @@ from binascii import hexlify, unhexlify
 import argparse
 import subprocess
 
-""" define length of mic sampling and sha256 rouds number """
+""" define length of mic sampling, sha256 rounds number, length of mic sampling for salt """
 (rnd_len, sha_rounds,slt_len)=(30,2048,5)
 
 """ parsing arguments """
