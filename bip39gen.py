@@ -29,7 +29,7 @@ import argparse
 import subprocess
 
 """ define length of mic sampling and sha256 rouds number """
-(rnd_len, sha_rounds)=(2,2048)
+(rnd_len, sha_rounds)=(60,2048)
 
 """ parsing arguments """
 parser = argparse.ArgumentParser("bip39gen.py")
