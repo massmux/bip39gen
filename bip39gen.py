@@ -44,8 +44,8 @@ def parseArguments():
 def getsha256(z):
     return hashlib.sha256(z.encode('utf-8')).hexdigest()
 
+""" elaborate words for printing """
 def showResults(words):
-    """ elaborate words for printing """
     words_arr=words.split(" ")
     print("**BIP39 words generated sequence**")
     n=1
@@ -100,3 +100,5 @@ def main():
 if __name__ == "__main__":
     parseArguments()
     main()
+
+
