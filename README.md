@@ -5,14 +5,14 @@ Generate bip39 mnemonic by microphone noise randomness
 
  the command is totally offline and must be run on a clean computer without any connection to the internet. It is suggested for example to run on a Tails OS (or similar Linux flavor OS) with internet disconnected and immediately save produced bip39 mnemonic on a sheet of paper. Beware also that no external source is watching at the procedure (a camera for example).
 
- libs required:
+## Requirements
 
 ```
- pip3 install mnemonic
+ pip3 install -r requirements.txt
 ```
 
 
- syntax
+## Syntax
 
 ```
 without params, creates mnemonic by gathering mic audio noise as a source of entropy. Here the command syntax:
@@ -38,6 +38,7 @@ optional arguments:
  ./bip39gen.py -e 12345678
 ```
  
+## More infos
 
  we talk about these topics on this youtube channel: http://www.youtube.com/c/MassimoSMusumeci and also at the telegram group: https://t.me/BitcoinSecPriv . Please refer also to resources published on the website https://www.massmux.com for more infos.
 
