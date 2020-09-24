@@ -25,19 +25,30 @@
 import hashlib
 from mnemonic import Mnemonic
 from binascii import hexlify, unhexlify
-import argparse
-import subprocess
+import argparse,os,subprocess
 
+""" check if sounddevice lib is available, if it is then gets imported """
+try:
+    import sounddevice
+    mode='sd'
+except ImportError:
+    mode='arec'
 
-""" define length of mic sampling, sha256 rounds number, length of mic sampling for salt """
-(rnd_len, sha_rounds,slt_len)=(30,2048,5)
+""" system constants """
+
+NOISE_SAMPLE        = 5    # main sampling seconds
+SHA256_ROUNDS       = 2048  # sha256 rounds (number)
+NOISE_SAMPLE_SALT   = 3     # salt sampling seconds
+SAMPLE_RATE         = 44100 # samplerate
+SAMPLING_FMT        = 'wav'
+
 
 """ parsing arguments """
 def parseArguments():
     global args
     parser = argparse.ArgumentParser("bip39gen.py")
     parser.add_argument("-e","--entropy", help="An optional random string \
-                    in case you prefer providing your own entropy", type=str, required=False)
+                        in case you prefer providing your own entropy", type=str, required=False)
     args = parser.parse_args()
 
 """ hash assist """
@@ -50,12 +61,45 @@ def showResults(words):
     print("**BIP39 words generated sequence**")
     n=1
     for i in words_arr:
-        print("word %s\t: %s" % (n,i) )
+        print ("{:12}: {:12}".format(n, i))
         n+=1
     print("BIP39 words generated sequence - single line print")
     print(words)
     return
 
+def getRandNoise():
+    """
+    creating unique noise by sampling entropy and salting it for SHA256_ROUNDS / use arecord+sha256 OS commands
+    this function is better when no equivalent library is available. Returns sha256 salt hashed noise
+    """
+    mycmd=subprocess.getoutput('arecord -d %s -f dat -t %s -q | sha256sum -b' %  (str(NOISE_SAMPLE),SAMPLING_FMT ))
+    hash0=mycmd[:64]
+    mysalt=subprocess.getoutput('arecord -d %s -f dat -t %s -q | sha256sum -b' %  (str(NOISE_SAMPLE_SALT),SAMPLING_FMT ))
+    salt0=mysalt[:64]
+    for i in range(0,SHA256_ROUNDS):
+        hash0=getsha256(hash0+salt0)
+    return hash0
+
+def getNoise256():
+    """
+    creating unique noise by sampling entropy and salting it for SHA256_ROUNDS / use python lib
+    Returns sha256 salt hashed noise
+    """
+    noise0 = sounddevice.rec(int(SAMPLE_RATE * NOISE_SAMPLE), samplerate=SAMPLE_RATE, channels=2, blocking=True)
+    salt0 = sounddevice.rec(int(SAMPLE_RATE * NOISE_SAMPLE_SALT), samplerate=SAMPLE_RATE, channels=2, blocking=True)
+    (noise,salt) =( hashlib.sha256(bytearray(b''.join(noise0))).hexdigest() , hashlib.sha256(bytearray(b''.join(salt0))).hexdigest() )
+    for i in range(0,SHA256_ROUNDS):
+        noise=getsha256(noise+salt)
+    return noise
+
+def clear():
+    """ clears screen """
+    # for windows
+    if os.name == 'nt':
+        _ = os.system('cls')
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        _ = os.system('clear')
 
 def main():
     oEntropy=args.entropy
@@ -67,25 +111,9 @@ def main():
         print("You provided the entropy as a string")
         hash0=getsha256(oEntropy)
         print("256bits hash from your source: %s" % hash0)
-        salt0=""
     else:
-        # create random by reading the mic for rnd_len seconds
-        print("Getting entropy from %s secs mic audiorecording.. please wait" % str(rnd_len) )
-        mycmd=subprocess.getoutput('arecord -d %s -f dat -t wav -q | sha256sum -b' %  str(rnd_len) )
-        hash0=mycmd[:64]
-        print("256bits hashed entropy: %s" % hash0)
-        # create random for salt
-        print("Getting entropy from mic for creating a salt.. please wait" )
-        mysalt=subprocess.getoutput('arecord -d %s -f dat -t wav -q | sha256sum -b' %  str(slt_len) )
-        salt0=mysalt[:64]
-        print("256bits hashed salt: %s" % salt0)
-
-    """ sha256 rounds """
-    print ("Iterating %s rounds of salted sha256 hashing.. please wait" % sha_rounds )
-    for i in range(0,sha_rounds):
-        hash0=getsha256(hash0+salt0)
-        #debug purpose
-        #print("%s %s Round %s val %s" % (hash0,salt0,i , hash0))
+        print("Getting entropy from %s secs mic audiorecording.. please wait" % str(NOISE_SAMPLE) )
+        hash0=getRandNoise() if mode=='arec' else getNoise256()
 
     entropy_b = bytearray(hash0, 'utf-8')
     """ create bip39 24 words """
@@ -94,6 +122,7 @@ def main():
     words = mnemo.to_mnemonic(entropy_hash)
     
     """ print results """
+    clear()
     showResults(words)
 
 

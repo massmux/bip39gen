@@ -40,6 +40,5 @@ optional arguments:
  
 ## More infos
 
- we talk about these topics on this youtube channel: http://www.youtube.com/c/MassimoSMusumeci and also at the telegram group: https://t.me/BitcoinSecPriv . Please refer also to resources published on the website https://www.massmux.com for more infos.
-
+ Please refer to resources published on the website https://www.massmux.com for more infos.
 
