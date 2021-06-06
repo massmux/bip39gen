@@ -1,7 +1,7 @@
 # bip39gen
 Generate bip39 mnemonic by microphone noise randomness 
 
-# This project has been expanded and and replaced by PAPERGEN PROJECT https://github.com/massmux/Papergen
+# This project has been improved and replaced by PAPERGEN PROJECT https://github.com/massmux/Papergen
 
  you can generate a 24words bip39 sequence from entropy coming from the computer's microphone (usage without the -e parameter) or by providing your own entropy source (with -e parameter). The source of entropy gets hashed a number of rounds with a true random salt.
 
